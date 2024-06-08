@@ -14,4 +14,5 @@ Install: `go install .`
 
 
 Usage: `go-create module_name`
+
 This will create a directory where the command was ran with the name `module_name`, initialize a go module with the same name and create a basic `main.go`
