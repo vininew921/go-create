@@ -16,6 +16,6 @@ Run `go install .`
 
 
 ### Running
-Run `go-create module_name`
+Run `go-create <mod_name>`
 
-This will create a directory where the command was ran with the name `module_name`, initialize a go module with the same name and create a basic `main.go`
+This will create a directory where the command was ran with the name `mod_name`, initialize a go module with the same name and create a basic `main.go`
