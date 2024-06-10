@@ -9,15 +9,15 @@ import (
 )
 
 func main() {
-	project_name, dir := create_dir()
-	create_module(project_name, dir)
+	project_email, dir := create_dir()
+	create_module(project_email, dir)
 	init_main(dir)
 
-	fmt.Printf("Done! Use `cd %s` to go to the newly created module's path", project_name)
+	fmt.Printf("Done! Use `cd %s` to go to the newly created module's path", project_email)
 }
 
-func create_module(project_name string, dir string) {
-	cmd := exec.Command("go", "mod", "init", project_name)
+func create_module(project_email string, dir string) {
+	cmd := exec.Command("go", "mod", "init", project_email)
 	cmd.Dir = dir
 
 	if err := cmd.Run(); err != nil {
@@ -25,7 +25,7 @@ func create_module(project_name string, dir string) {
 		os.Exit(1)
 	}
 
-	fmt.Println("Created module", project_name)
+	fmt.Println("Created module", project_email)
 }
 
 func init_main(dir string) {
@@ -52,22 +52,37 @@ func create_dir() (string, string) {
 		os.Exit(1)
 	}
 
-	project_name := strings.Trim(os.Args[1], " ")
-	if len(project_name) == 0 {
+	project_email := strings.Trim(os.Args[1], " ")
+	if len(project_email) == 0 {
 		usage()
 		os.Exit(1)
 	}
 
-	full_path := dir + string(os.PathSeparator) + project_name
+	full_path := dir + string(os.PathSeparator) + project_email
+	if exists, err := path_exists(full_path); exists || err != nil {
+		fmt.Printf("Directory %s already exists", full_path)
+		os.Exit(1)
+	}
 
 	os.Mkdir(full_path, fs.ModePerm)
 
-	return project_name, full_path
+	return project_email, full_path
 }
 
 func usage() {
-	fmt.Println("Project name wasn't provided")
-	fmt.Println("Usage: go-create <package_name>")
+	fmt.Println("Project email wasn't provided")
+	fmt.Println("Usage: go-create <package_email>")
+}
+
+func path_exists(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return false, err
 }
 
 func main_content() []byte {
